@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+venv/
+
+# Private
+private*.*
+private*/
+
+# Mac
+.DS_Store

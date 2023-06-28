@@ -73,9 +73,12 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
             'https://cdn.discordapp.com/attachments/1123524711742193694/',
             'https://github.com/'
         )
+        fail = True
         for link in startswith:
-            if not icon_url.startswith(link):
-                raise Exception('please use an image URL uploaded to %s. After uploading, right click (or press share on mobile) to copy the attachment link!' % channel.mention)
+            if icon_url.startswith(link):
+                fail = False
+        if fail:
+            raise Exception('please use an image URL uploaded to %s. After uploading, right click (or press share on mobile) to copy the attachment link!' % channel.mention)
 
         await interaction.response.send_message(
             'Request created by %s.\n# `%s`.\n**Short**: %s\n**Long**: %s\n**Publisher**: %s\n**Icon URL**: <%s>' % (interaction.user.mention, title_id, short, long, publisher, icon_url),

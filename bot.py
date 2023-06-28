@@ -68,7 +68,7 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
         short, long, publisher, icon_url = tuple(map(str, (short, long, publisher, icon_url)))
         if not re.search(pattern, icon_url):
             raise Exception('not a real URL!')
-        if not icon_url.startswith('https://media.discordapp.net/attachments/1012881268746223796/1123524711742193694/') and not icon_url.startswith('https://cdn.discordapp.com/attachments/1123524711742193694/1123579518284746762/'):
+        if not icon_url.startswith('https://media.discordapp.net/attachments/1123524711742193694/') and not icon_url.startswith('https://cdn.discordapp.com/attachments/1123524711742193694/'):
             raise Exception('please use an image URL uploaded to %s. After uploading, right click (or press share on mobile) to copy the attachment link!' % channel.mention)
 
         await interaction.response.send_message(

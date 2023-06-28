@@ -80,12 +80,18 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
         if fail:
             raise Exception('please use an image URL uploaded to %s. After uploading, right click (or press share on mobile) to copy the attachment link!' % channel.mention)
 
+        meta = 'Request created by %s.\n# `%s`.\n**Title ID**: %s\n**Short**: %s\n**Long**: %s\n**Publisher**: %s\n**Icon URL**: <%s>' % (interaction.user.mention, short, title_id, short, long, publisher, icon_url)
+
         await interaction.response.send_message(
-            'Request created by %s.\n# `%s`.\n**Short**: %s\n**Long**: %s\n**Publisher**: %s\n**Icon URL**: <%s>' % (interaction.user.mention, title_id, short, long, publisher, icon_url),
+            meta,
             ephemeral = False
         )
 
-        await interaction.channel.send('1. Passed all checks')
+        state = ''
+
+        state += '\n1. Passed all checks'
+
+        await interaction.edit_original_response(meta + state)
 
         ret = {
             'short': short,
@@ -95,7 +101,9 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
         }
         ret = io.BytesIO(bytes(json.dumps(ret), 'utf-8'))
 
-        await interaction.channel.send('2. Formatted JSON file')
+        state += '\n2. Formatted JSON file'
+
+        await interaction.edit_original_response(meta + state)
 
         image_data = requests.get(icon_url).content
         image = Image.open(io.BytesIO(image_data))
@@ -105,24 +113,35 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
         image.save(image_data, format = 'PNG')
         image_data.seek(0)
 
-        await interaction.channel.send('3. Formatted icon PNG')
+        state += '\n3. Formatted icon PNG'
+
+        await interaction.edit_original_response(meta + state)
 
         files = (
             discord.File(fp = image_data, filename = '%s.png' % title_id),
             discord.File(fp = ret, filename = '%s.txt' % title_id),
         )
 
-        await interaction.channel.send('4. Created Discord files')
+        state += '\n4. Created Discord files'
+
+        await interaction.edit_original_response(meta + state)
 
         message = await (await interaction.original_response()).fetch()
 
-        thread = await channel.create_thread(name = title_id, message = message if interaction.channel.id == 1123524711742193694 else None)
+        thread = discord.utils.get(channel.threads, name = title_id)
+        if not thread:
+            thread = await channel.create_thread(name = title_id, message = message if interaction.channel.id == channel.id else None)
+            state += '\n5. Created Discord thread (%s)' % thread.mention
+        else:
+            state += '\n5. Grabbed open Discord thread (%s)' % thread.mention
 
-        await interaction.channel.send('5. Created Discord thread (%s)' % thread.mention)
+        await interaction.edit_original_response(meta + state)
 
         upload = await thread.send(files = files)
 
-        await interaction.channel.send('6. Uploaded files (%s)' % upload.jump_url)
+        state += '\n6. Uploaded files (%s)' % upload.jump_url
+
+        await interaction.edit_original_response(meta + state)
 
     except Exception as e:
         try:

@@ -1,6 +1,7 @@
 # Created by Deltaion Lee (MCMi460) on Github
 
 import discord
+import asyncio
 from discord.ext import commands
 from PIL import Image
 import re

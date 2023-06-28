@@ -137,11 +137,15 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
 
         await interaction.edit_original_response(content = meta + state)
 
-        upload = await thread.send(files = files)
+        upload = await thread.send('(%s)' % interaction.user.mention, files = files)
 
         state += '\n6. Uploaded files (%s)' % upload.jump_url
 
         await interaction.edit_original_response(content = meta + state)
+
+        await asyncio.sleep(10)
+
+        await interaction.edit_original_response(content = meta)
 
     except Exception as e:
         try:

@@ -91,7 +91,7 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
 
         state += '\n1. Passed all checks'
 
-        await interaction.edit_original_response(meta + state)
+        await interaction.edit_original_response(content = meta + state)
 
         ret = {
             'short': short,
@@ -103,7 +103,7 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
 
         state += '\n2. Formatted JSON file'
 
-        await interaction.edit_original_response(meta + state)
+        await interaction.edit_original_response(content = meta + state)
 
         image_data = requests.get(icon_url).content
         image = Image.open(io.BytesIO(image_data))
@@ -115,7 +115,7 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
 
         state += '\n3. Formatted icon PNG'
 
-        await interaction.edit_original_response(meta + state)
+        await interaction.edit_original_response(content = meta + state)
 
         files = (
             discord.File(fp = image_data, filename = '%s.png' % title_id),
@@ -124,7 +124,7 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
 
         state += '\n4. Created Discord files'
 
-        await interaction.edit_original_response(meta + state)
+        await interaction.edit_original_response(content = meta + state)
 
         message = await (await interaction.original_response()).fetch()
 
@@ -135,13 +135,13 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
         else:
             state += '\n5. Grabbed open Discord thread (%s)' % thread.mention
 
-        await interaction.edit_original_response(meta + state)
+        await interaction.edit_original_response(content = meta + state)
 
         upload = await thread.send(files = files)
 
         state += '\n6. Uploaded files (%s)' % upload.jump_url
 
-        await interaction.edit_original_response(meta + state)
+        await interaction.edit_original_response(content = meta + state)
 
     except Exception as e:
         try:

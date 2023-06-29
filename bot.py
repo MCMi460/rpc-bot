@@ -72,7 +72,8 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
         startswith = (
             'https://media.discordapp.net/attachments/1123524711742193694/',
             'https://cdn.discordapp.com/attachments/1123524711742193694/',
-            'https://github.com/'
+            'https://github.com/',
+            'https://raw.githubusercontent.com/',
         )
         fail = True
         for link in startswith:

@@ -112,7 +112,7 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
 
         image_data = requests.get(icon_url).content
         image = Image.open(io.BytesIO(image_data))
-        image.resize((48, 48))
+        image = image.resize((48, 48))
 
         image_data = io.BytesIO()
         image.save(image_data, format = 'PNG')
@@ -139,6 +139,7 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
             state += '\n5. Created Discord thread (%s)' % thread.mention
         else:
             state += '\n5. Grabbed open Discord thread (%s)' % thread.mention
+            await thread.send(meta)
 
         await interaction.edit_original_response(content = meta + state)
 

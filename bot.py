@@ -63,6 +63,9 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
     channel = bot.get_channel(1123524711742193694)
 
     try:
+        if channel.id != interaction.channel.id:
+            raise Exception('please send request commands in %s' % channel.mention)
+
         title_id = title_id.upper()
         if not isHex(title_id):
             raise Exception('not real title ID!')
@@ -132,7 +135,7 @@ async def create(interaction:discord.Interaction, title_id:str, short:str, long:
 
         thread = discord.utils.get(channel.threads, name = title_id)
         if not thread:
-            thread = await channel.create_thread(name = title_id, message = message if interaction.channel.id == channel.id else None)
+            thread = await channel.create_thread(name = title_id, message = message)
             state += '\n5. Created Discord thread (%s)' % thread.mention
         else:
             state += '\n5. Grabbed open Discord thread (%s)' % thread.mention

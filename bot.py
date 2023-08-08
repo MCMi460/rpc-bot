@@ -13,6 +13,7 @@ import love
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
 bot = commands.Bot(command_prefix = '.', intents = intents, case_insensitive = True)
 
 # https://www.geeksforgeeks.org/check-if-an-url-is-valid-or-not-using-regular-expression/
@@ -41,6 +42,16 @@ async def on_ready():
             name = 'your game suggestions'
         )
     )
+
+@bot.event
+async def on_member_join(member):
+    guild = member.guild
+    if guild.system_channel is not None:
+        await guild.system_channel.send(
+            'Welcome to %s, %s! If you want a quick tutorial on using NSO-RPC or 3DS-RPC, go to <#1126310378981294211>.\nOr, if you\'d like a special role (like 3DS Updates or NSO Updates), see <id:customize>!' % (
+                member.guild.name, member.mention
+            )
+        )
 
 @bot.event
 async def on_message(message):

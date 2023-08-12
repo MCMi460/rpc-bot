@@ -216,5 +216,11 @@ def isHex(string):
             return False
     return True if string and len(string) == 16 else False
 
-from private import token
-bot.run(token)
+async def main():
+    async with bot:
+        await bot.load_extension('NSO-IconDB.server.bot_extension')
+
+        from private import token
+        await bot.start(token)
+
+asyncio.run(main())

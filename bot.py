@@ -216,6 +216,9 @@ async def get_title_id_error(interaction: discord.Interaction, error: discord.ap
 @bot.tree.command()
 @discord.app_commands.checks.cooldown(1, 30)
 async def get_idbe_data(interaction:discord.Interaction, title_id:str):
+    '''
+    Gets title information of a title ID from the IDBE database
+    '''
     try:
         title_id = title_id.replace('0x', '')
         if not isHex(title_id):

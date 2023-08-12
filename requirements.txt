@@ -2,3 +2,4 @@ discord.py
 requests
 pillow
 asyncio
+pycryptodomex

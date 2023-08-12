@@ -10,6 +10,7 @@ import json
 import typing
 import requests
 import love
+import love3
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -212,11 +213,38 @@ async def get_title_id_error(interaction: discord.Interaction, error: discord.ap
     if isinstance(error, discord.app_commands.CommandOnCooldown):
         await interaction.response.send_message(str(error), ephemeral = True)
 
+@bot.tree.command()
+@discord.app_commands.checks.cooldown(1, 30)
+async def get_idbe_data(interaction:discord.Interaction, title_id:str):
+    try:
+        title_id = title_id.replace('0x', '')
+        if not isHex(title_id):
+            raise Exception('not real title ID!')
+
+        ret, image = love3.getTitleInfo('0x' + title_id)
+        files = (
+            discord.File(fp = image, filename = '%s.png' % title_id),
+        )
+        await interaction.response.send_message(
+            content = ret,
+            files = files,
+        )
+    except Exception as e:
+        await interaction.response.send_message(
+            'Exception encountered!\n%s' % e,
+            ephemeral = True,
+        )
+
+@get_idbe_data.error
+async def get_idbe_data_error(interaction: discord.Interaction, error: discord.app_commands.AppCommandError):
+    if isinstance(error, discord.app_commands.CommandOnCooldown):
+        await interaction.response.send_message(str(error), ephemeral = True)
+
 def isHex(string):
     for char in string:
         if not char.lower() in '0123456789abcdef':
             return False
-    return True if string and len(string) == 16 else False
+    return string and len(string) == 16
 
 async def main():
     async with bot:

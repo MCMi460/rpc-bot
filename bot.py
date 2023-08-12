@@ -192,8 +192,10 @@ async def get_title_id(interaction:discord.Interaction, friendcode:int):
         ret = requests.get('https://3dsrpc.com/api/u/%s' % friendcode, headers = headers).json()
         if ret['Exception']:
             raise Exception(ret['Exception'])
+        titleID = ret['User'].get('Presence', {}).get('titleID', None)
+        updateID = ret['User'].get('Presence', {}).get('updateID', None)
         await interaction.response.send_message(
-            '`%s`: **%s**, Playing `%s`' % (ret['User']['friendCode'], ret['User']['username'], ret['User'].get('Presence', {}).get('game', {}).get('@id', 'Nothing!')),
+            '`%s`: **%s**\nPlaying: `%s`\nUpdate: `%s`' % (ret['User']['friendCode'], ret['User']['username'], hex(int(titleID)).replace('0x', '').zfill(16) if titleID else 'Nothing!', updateID if updateID else 'None!'),
             ephemeral = False
         )
     except Exception as e:

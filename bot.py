@@ -63,6 +63,8 @@ async def on_message(message):
 async def sync(ctx) -> None:
     synced = await ctx.bot.tree.sync()
     await ctx.send(f'Synced {len(synced)} commands globally')
+    synced = await ctx.bot.tree.sync(guild = discord.Object(id = NRP_Guild))
+    await ctx.send(f'Synced {len(synced)} commands to NRP_Guild')
 
 @bot.tree.command(guild = discord.Object(id = NRP_Guild))
 @discord.app_commands.checks.cooldown(1, 60)

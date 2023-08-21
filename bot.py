@@ -16,6 +16,9 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 bot = commands.Bot(command_prefix = '.', intents = intents, case_insensitive = True)
+NRP_Guild = discord.utils.get(bot.guilds, id = 1012066992817193001)
+if not NRP_Guild:
+    raise Exception('expected to be in Nintendo Rich Presence guild')
 
 # https://www.geeksforgeeks.org/check-if-an-url-is-valid-or-not-using-regular-expression/
 regex = ('((http|https)://)(www.)?' +
@@ -28,11 +31,6 @@ pattern = re.compile(regex)
 
 @bot.event
 async def on_ready():
-    for guild in bot.guilds:
-        if guild.id != 1012066992817193001:
-            print('Leaving %s: %s' % (guild.id, guild.name))
-            await guild.leave()
-
     print('Logged in as %s (%s)' % (bot.user,bot.user.id))
     print('Present in %s servers.' % len(bot.guilds))
     print('------')
@@ -47,7 +45,7 @@ async def on_ready():
 @bot.event
 async def on_member_join(member):
     guild = member.guild
-    if guild.system_channel is not None:
+    if guild.id == NRP_Guild.id and guild.system_channel is not None:
         await guild.system_channel.send(
             'Welcome to %s, %s! If you want a quick tutorial on using NSO-RPC or 3DS-RPC, go to <#1126310378981294211>.\nOr, if you\'d like a special role (like 3DS Updates or NSO Updates), see <id:customize>!' % (
                 member.guild.name, member.mention
@@ -66,7 +64,7 @@ async def sync(ctx) -> None:
     synced = await ctx.bot.tree.sync()
     await ctx.send(f'Synced {len(synced)} commands globally')
 
-@bot.tree.command()
+@bot.tree.command(guild = NRP_Guild)
 @discord.app_commands.checks.cooldown(1, 60)
 async def create(interaction:discord.Interaction, title_id:str, short:str, long:str, publisher:str, icon_url:str):
     '''

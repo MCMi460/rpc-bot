@@ -16,7 +16,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 bot = commands.Bot(command_prefix = '.', intents = intents, case_insensitive = True)
-NRP_Guild = None
+NRP_Guild = 1012066992817193001
 
 # https://www.geeksforgeeks.org/check-if-an-url-is-valid-or-not-using-regular-expression/
 regex = ('((http|https)://)(www.)?' +
@@ -66,7 +66,7 @@ async def sync(ctx) -> None:
     synced = await ctx.bot.tree.sync()
     await ctx.send(f'Synced {len(synced)} commands globally')
 
-@bot.tree.command(guild = NRP_Guild)
+@bot.tree.command(guild = discord.Object(id = NRP_Guild))
 @discord.app_commands.checks.cooldown(1, 60)
 async def create(interaction:discord.Interaction, title_id:str, short:str, long:str, publisher:str, icon_url:str):
     '''

@@ -16,9 +16,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 bot = commands.Bot(command_prefix = '.', intents = intents, case_insensitive = True)
-NRP_Guild = discord.utils.get(bot.guilds, id = 1012066992817193001)
-if not NRP_Guild:
-    raise Exception('expected to be in Nintendo Rich Presence guild')
+NRP_Guild = None
 
 # https://www.geeksforgeeks.org/check-if-an-url-is-valid-or-not-using-regular-expression/
 regex = ('((http|https)://)(www.)?' +
@@ -41,6 +39,10 @@ async def on_ready():
             name = 'your game suggestions'
         )
     )
+    global NRP_Guild
+    NRP_Guild = discord.utils.get(bot.guilds, id = 1012066992817193001)
+    if not NRP_Guild:
+        raise Exception('expected to be in Nintendo Rich Presence guild')
 
 @bot.event
 async def on_member_join(member):
